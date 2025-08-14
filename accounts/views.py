@@ -12,3 +12,7 @@ def signup_view(request):
     else:
         form = UserSignupForm()
     return render(request, 'signup.html', {'form': form})
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Welcome to HackMatch!")
