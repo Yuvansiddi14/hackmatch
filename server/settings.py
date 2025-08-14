@@ -1,31 +1,27 @@
 from pathlib import Path
-from django.conf import global_settings
 import os
 import dj_database_url
 
-# Base paths
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dev-secret-key-change-me'
-
-# Dev mode
+# Security
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-me')
 DEBUG = True
-ALLOWED_HOSTS = ['.onrender.com']
 
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
-# Applications
+# Installed apps
 INSTALLED_APPS = [
-    # Django apps
+    # Django core
     'django.contrib.admin',
-    'rest_framework.authtoken',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third‑party
+    # Third-party
     'rest_framework',
     'corsheaders',
     'dj_rest_auth',
@@ -37,7 +33,7 @@ INSTALLED_APPS = [
     # Local apps
     'accounts',
     'hackathons',
-    'matcher'
+    'matcher',
 ]
 
 # Middleware
@@ -48,17 +44,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-    # 👇 Allauth middleware
     'allauth.account.middleware.AccountMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls'
 
-# ✅ Template directory added
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -75,10 +68,9 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'server.wsgi.application'
 
-# Database (PostgreSQL)
+# Database
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
@@ -103,25 +95,42 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Custom user model
+# Custom user model
 AUTH_USER_MODEL = 'accounts.User'
 
-# ✅ Allauth / Sites (updated to avoid deprecation)
+# Allauth / Sites
 SITE_ID = 1
-ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username', 'password1', 'password2']
 
-# CORS (for React dev server)
+# CORS
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 
-# DRF (keep minimal for now)
+# DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+}
+
+# Logging (optional but helpful)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
 }
