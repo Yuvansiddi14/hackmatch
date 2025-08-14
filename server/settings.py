@@ -9,14 +9,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# ✅ Add all your apps here
 INSTALLED_APPS = [
-    'accounts',
+    'accounts',         # custom user model
+    'hackathon',        # your hackathon model
+    'matcher',          # team matching logic
+    'registration',     # user registration flow
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',   # if you're using DRF
+    'rest_framework.authtoken',  # for token auth
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -57,4 +63,22 @@ DATABASES = {
     )
 }
 
+# ✅ Static files setup
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# ✅ Media files (if you use uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ✅ Optional: DRF settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
