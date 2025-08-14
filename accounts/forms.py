@@ -6,15 +6,8 @@ from django.contrib.auth.password_validation import validate_password
 User = get_user_model()
 
 class UserSignupForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Password",
-        help_text="Your password must be strong and secure."
-    )
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Confirm Password"
-    )
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -24,12 +17,11 @@ class UserSignupForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-
         if password and confirm_password and password != confirm_password:
             self.add_error('confirm_password', "Passwords do not match.")
 
     def clean_password(self):
-        password = self.cleaned_data.get('password')
+        password = self.cleaned_data.get("password")
         validate_password(password)
         return password
 

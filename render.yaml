@@ -1,13 +1,9 @@
-# render.yaml
 services:
   - type: web
-    name: hackmatch-backend
+    name: hackmatch
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn server.wsgi:application
     envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: server.settings
-      - key: SECRET_KEY
-        value: 8867914141
-
+      - key: DATABASE_URL
+        value: <your-postgresql-url>
