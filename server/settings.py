@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import dj_database_url
 
 # Base paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,14 +77,11 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 # Database (PostgreSQL)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hackmatch_dev',
-        'USER': 'yuvan',          # replace with: your `whoami` output if different
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 # Password validation
