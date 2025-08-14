@@ -10,7 +10,7 @@ SECRET_KEY = 'dev-secret-key-change-me'
 
 # Dev mode
 DEBUG = True
-ALLOWED_HOSTS = ['hackmatch-30le.onrender.com']
+ALLOWED_HOSTS = ['.onrender.com']
 
 
 # Applications
