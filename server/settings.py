@@ -11,10 +11,10 @@ ALLOWED_HOSTS = ['*']
 
 # ✅ Add all your apps here
 INSTALLED_APPS = [
-    'accounts',         # custom user model
-    'hackathon',        # your hackathon model
-    'matcher',          # team matching logic
-    'registration',     # user registration flow
+   'accounts',
+    'hackathons',       # ✅ corrected name
+    'matcher',
+    'registration',     # if this exists
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,13 +55,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'server.wsgi.application'
+# Detect if you're running on Render
+RENDER = os.getenv('RENDER', 'false').lower() == 'true'
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
+if RENDER:
+    # Use PostgreSQL on Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # Use SQLite locally
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
 
 # ✅ Static files setup
 STATIC_URL = '/static/'
