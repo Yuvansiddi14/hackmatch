@@ -1,12 +1,20 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
 
 class UserSignupForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, label="Password")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Password",
+        help_text="Your password must be strong and secure."
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Confirm Password"
+    )
 
     class Meta:
         model = User
@@ -18,7 +26,12 @@ class UserSignupForm(forms.ModelForm):
         confirm_password = cleaned_data.get("confirm_password")
 
         if password and confirm_password and password != confirm_password:
-            raise ValidationError("Passwords do not match.")
+            self.add_error('confirm_password', "Passwords do not match.")
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        validate_password(password)
+        return password
 
     def save(self, commit=True):
         user = super().save(commit=False)
