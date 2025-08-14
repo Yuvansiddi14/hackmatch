@@ -1,4 +1,6 @@
 from pathlib import Path
+from django.contrib.auth import get_user_model
+User = get_user_model()
 import os
 import dj_database_url
 
